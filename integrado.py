@@ -1,12 +1,11 @@
+from tkinter import *
+from PIL import Image, ImageTk
+
 from pynput.mouse import Button, Controller # library that able the function of the mouse
 import cv2 # library to de computer vision
 import numpy as np # library that able to work with arrays
 import wx
 
-
-#****************************************************************************************************************
-#******************************************FUNCTIONS*************************************************************
-#****************************************************************************************************************
 
 def videoCapture():
     cam = cv2.VideoCapture(1)
@@ -64,14 +63,8 @@ def contourColor(conts, mLocOld, DampingFactor, sx, sy):
 
 
 
-def imageShow(img, result):
-
-    cv2.imshow('result', result)
+def imageShow(img):
     cv2.imshow("cam2",img)
-     
-#****************************************************************************************************************
-#****************************************************************************************************************
-
 
 
 
@@ -83,8 +76,9 @@ mouse = Controller()
 lowerBound=np.array([22,116, 129])
 upperBound=np.array([179, 255, 255])
 
-# lowerBound=np.array([100,91, 147])
-# upperBound=np.array([133, 255, 255])
+ 
+# lowerBound=np.array([106,159, 0])
+# upperBound=np.array([179, 255, 255])
 
 
 kernelOpen=np.ones((5,5))
@@ -105,9 +99,22 @@ cam = videoCapture()
 cam.set(3,camx)
 cam.set(4, camy)
 
-while(True):
 
+root = Tk()
+root.geometry("700x540")
+root.configure(bg="black")
+Label(root, text="Teste cam1", font=("times new roman", 30, "bold"), bg="black", fg="red").pack()
+f1 = LabelFrame(root, bg="red")
+f1.pack()
+L1 = Label(f1, bg="red")
+L1.pack()
+
+
+
+while(True):
+    
     ret, img=cam.read() # decodes and returns the next video frame
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = cv2.flip(img, 1) # Flips a 2D array around vertical, horizontal, or both axes.
     maskFinal = masksProcess(img, lowerBound, upperBound, kernelOpen, kernelClose)
 
@@ -117,15 +124,10 @@ while(True):
 
     contourColor(conts, mLocOld, DampingFactor, sx, sy)
 
+    img = ImageTk.PhotoImage(Image.fromarray(img))
 
-    imageShow(img, result)
+    L1['image'] = img
+
+    root.update()
 
     
-    key = cv2.waitKey(1) & 0xFF
-	# if the 'esc' key is pressed, stop the loop
-    if key == 27:
-	    break
-
-camera.release()
-cv2.destroyAllWindows()
-

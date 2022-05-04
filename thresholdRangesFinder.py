@@ -34,7 +34,7 @@ phMin = psMin = pvMin = phMax = psMax = pvMax = 0
 
 # Output Image to display
 if useCamera:
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     # Wait longer to prevent freeze for videos.
     waitTime = 330
 else:
